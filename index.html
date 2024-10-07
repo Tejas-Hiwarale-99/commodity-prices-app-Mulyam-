@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commodity Prices</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Firebase SDK (using compat versions) -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Initialize Firebase -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDmym8FFvxOw7V17frQnMynXQLnyMMZec",
+            authDomain: "mulyam-test-code.firebaseapp.com",
+            projectId: "mulyam-test-code",
+            storageBucket: "mulyam-test-code.appspot.com",
+            messagingSenderId: "555964458959",
+            appId: "1:555964458959:web:696b189741a26d807a54ba"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+</head>
+<body>
+    <h1>Enter Daily Commodity Prices</h1>
+   
+    <!-- Form for entering commodity prices -->
+    <form id="commodity-form">
+        <label for="commodity">Commodity Type:</label>
+        <select id="commodity" name="commodity">
+            <option value="onion">Onion</option>
+            <option value="potato">Potato</option>
+        </select>
+
+        <label for="location">Source Location:</label>
+        <select id="location" name="location"></select>
+
+        <label for="size">Size:</label>
+        <input type="number" id="size" name="size" placeholder="Enter size (1-5)" required>
+
+        <label for="quality">Quality:</label>
+        <input type="number" id="quality" name="quality" placeholder="Enter quality (1-5)" required>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" placeholder="Enter price" required>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <!-- Google Sign-In Button -->
+    <button type="button" id="google-signin-btn">Login with Google</button>
+
+    <!-- Include external JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
