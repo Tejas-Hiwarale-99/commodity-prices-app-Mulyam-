@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mulyam — Commodity Prices</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(135deg,#1f4037,#99f2c8);
+}
+
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+h1 { text-align:center; }
+
+label { font-weight:bold; margin-top:12px; display:block; }
+
+select,input {
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+button {
+  width:100%;
+  padding:12px;
+  margin-top:20px;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#loginBtn { background:#4285F4; color:white; }
+#logoutBtn { background:#e74c3c; color:white; display:none; }
+#submitBtn { background:#27ae60; color:white; }
+
+.userInfo {
+  text-align:center;
+  margin-bottom:15px;
+  font-weight:bold;
+}
+
+.success {
+  margin-top:15px;
+  padding:10px;
+  background:#2ecc71;
+  border-radius:6px;
+  display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🌾 Mulyam</h1>
+
+<div class="userInfo" id="userInfo">Not signed in</div>
+
+<button id="loginBtn">Sign in with Google</button>
+<button id="logoutBtn">Logout</button>
+
+<hr>
+
+<label>Commodity</label>
+<select id="commodity"></select>
+
+<label>Source Location</label>
+<select id="source"></select>
+
+<label>Size</label>
+<select id="size"></select>
+
+<label>Quality</label>
+<select id="quality"></select>
+
+<label>Price (₹)</label>
+<input type="number" id="price">
+
+<label>Date</label>
+<input type="text" id="date" readonly>
+
+<label>Email</label>
+<input type="text" id="email" readonly>
+
+<button id="submitBtn">Submit</button>
+
+<div class="success" id="successMsg">Saved successfully ✔</div>
+
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+
+/* 🔥 STEP 6A — PASTE YOUR FIREBASE CONFIG HERE */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCDgC2CaighIWyFUO27g8fGA2oX2eNltDY",
+  authDomain: "mulyam-29fab.firebaseapp.com",
+  projectId: "mulyam-29fab",
+  storageBucket: "mulyam-29fab.firebasestorage.app",
+  messagingSenderId: "95324903636",
+  appId: "1:95324903636:web:ca12ed61a9a789d0cfc341"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+
+/* 🔥 GOOGLE SIGN IN */
+
+const provider = new firebase.auth.GoogleAuthProvider();
+
+document.getElementById("loginBtn").onclick = () => {
+  auth.signInWithPopup(provider);
+};
+
+document.getElementById("logoutBtn").onclick = () => {
+  auth.signOut();
+};
+
+
+/* 🔥 SESSION HANDLING */
+
+auth.onAuthStateChanged(user => {
+
+  if(user) {
+
+    document.getElementById("userInfo").innerText =
+      "Signed in as: " + user.email;
+
+    document.getElementById("email").value = user.email;
+
+    loginBtn.style.display = "none";
+    logoutBtn.style.display = "block";
+
+  } else {
+
+    document.getElementById("userInfo").innerText = "Not signed in";
+
+    loginBtn.style.display = "block";
+    logoutBtn.style.display = "none";
+  }
+});
+
+
+/* 🔥 AUTO DATE */
+
+document.getElementById("date").value =
+  new Date().toLocaleDateString();
+
+
+/* 🔥 COMMODITY DATA */
+
+const data = {
+  Onion:{source:["MP","MH","KA","RJ","Local"],size:["Golta","Golti","Medium"],quality:["1","2","3","4","5"]},
+  Ginger:{source:["MH","KA","Orissa","Assam"],size:["1","2","3","4","5"],quality:["Rigodi","Himachal"]},
+  Garlic:{source:["MP","RJ","UP"],size:["Small","Medium","Large","Jumbo"],quality:["1","2","3","4","5"]},
+  Chilli:{source:["MH","UP","Bihar","MP","Chhattisgarh","Punjab"],size:["1","2","3","4","5"],quality:["Indu","G4","6013","Bullet","Teja4"]},
+  Potato:{source:["UP","MP","KA"],size:["1","2","3","4","5"],quality:["White","Hybrid","Chipsona","Kanchan","Holland","Sinduri"]},
+  Tomato:{source:["MH","KA","Chhattisgarh","Local"],size:["1","2","3","4","5"],quality:["1","2","3","4","5"]},
+  "Tender Coconut":{source:["TN","KA","GJ","WB"],size:["1","2","3","4","5"],quality:["Premium","Good"]},
+  Apple:{source:["Himachal","Kashmir"],size:["100","125","150","175","240","310","7 layer"],quality:["1","2","3","4","5"]},
+  Pomo:{source:["GJ","RJ","MH"],size:["1","2","3","4","5"],quality:["1","2","3","4","5"]}
+};
+
+const commodity = document.getElementById("commodity");
+const source = document.getElementById("source");
+const size = document.getElementById("size");
+const quality = document.getElementById("quality");
+
+/* Fill commodity dropdown */
+Object.keys(data).forEach(c=>{
+  commodity.innerHTML += `<option>${c}</option>`;
+});
+
+/* Dependent fields */
+commodity.onchange = () => {
+
+  const info = data[commodity.value];
+
+  fill(source, info.source);
+  fill(size, info.size);
+  fill(quality, info.quality);
+};
+
+function fill(el, arr){
+  el.innerHTML="";
+  arr.forEach(v => el.innerHTML += `<option>${v}</option>`);
+}
+
+
+/* 🔥 SAVE TO FIRESTORE */
+
+document.getElementById("submitBtn").onclick = async () => {
+
+  const user = auth.currentUser;
+
+  if(!user){
+    alert("Please login first");
+    return;
+  }
+
+  await db.collection("prices").add({
+    commodity: commodity.value,
+    source: source.value,
+    size: size.value,
+    quality: quality.value,
+    price: document.getElementById("price").value,
+    date: new Date(),
+    email: user.email
+  });
+
+  successMsg.style.display="block";
+  setTimeout(()=>successMsg.style.display="none",2000);
+
+  document.getElementById("price").value="";
+};
+
+</script>
+</body>
+</html>
