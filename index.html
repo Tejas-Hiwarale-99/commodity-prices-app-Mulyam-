@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Mulyam — Commodity Prices</title>
@@ -241,3 +242,72 @@ document.getElementById("submitBtn").onclick = async () => {
 </script>
 </body>
 </html>
+=======
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commodity Price Entry</title>
+    <link rel="stylesheet" href="styles.css">
+<!-- Firebase SDK -->
+
+
+<script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore-compat.js"></script>
+
+<script>
+  // Your Firebase SDK config (replace with your own Firebase config)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBDmym8FFvxOw7V17frQnMynXQLnyMMZec",
+  authDomain: "mulyam-test-code.firebaseapp.com",
+  projectId: "mulyam-test-code",
+  storageBucket: "mulyam-test-code.appspot.com",
+  messagingSenderId: "555964458959",
+  appId: "1:555964458959:web:696b189741a26d807a54ba"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+
+</head>
+<body>
+    <h1>Commodity Price Entry Form</h1>
+
+    <button id="googleSignIn">Sign in with Google</button>
+    
+    <!-- Show the form even if the user hasn't signed in yet -->
+    <div id="userInfo">
+        <p>Signed in as: <span id="userEmail">Guest</span></p>
+        <form id="priceForm">
+            <label for="commodityType">Commodity Type:</label>
+            <select id="commodityType" name="commodityType">
+                <option value="fruits">Fruits</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="grains">Grains</option>
+            </select>
+
+            <label for="sourceLocation">Source Location:</label>
+            <select id="sourceLocation" name="sourceLocation">
+                <option value="farm">Farm</option>
+                <option value="market">Market</option>
+            </select>
+
+            <label for="size">Size:</label>
+            <input type="text" id="size" name="size" required>
+
+            <label for="quality">Quality:</label>
+            <input type="text" id="quality" name="quality" required>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script src="script.js"></script>
+
+</body>
+</html>
+>>>>>>> 437bce9711916a79df8f5e48b5d8862868b76f9f
